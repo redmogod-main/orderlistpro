@@ -280,7 +280,7 @@ class ControllerSaleOrderListPro extends Controller {
             $page = 1;
         }
 
-        if (!$this->config->get('module_OrderListPro_status') || ($this->config->get('module_OrderListPro_status') && !$this->validateKey())) {
+        if (!$this->config->get('module_OrderListPro_status') || ($this->config->get('module_OrderListPro_status') && $this->validateKey())) {
             $this->response->redirect($this->url->link('sale/order', 'user_token=' . $this->session->data['user_token'] . $url, 'SSL'));
         }
 
@@ -461,7 +461,7 @@ class ControllerSaleOrderListPro extends Controller {
         }
 
         $data['invoice'] = $this->url->link('sale/OrderListPro/invoice', 'user_token=' . $this->session->data['user_token'], true);
-        $data['add'] = $this->url->link('sale/order/add', 'user_token=' . $this->session->data['user_token'] . $url, true);
+        $data['add'] = $this->url->link('sale/OrderManager/add', 'user_token=' . $this->session->data['user_token'] . $url, true);
         $data['delete'] = str_replace('&amp;', '&', $this->url->link('sale/OrderListPro/delete', 'user_token=' . $this->session->data['user_token'] . $url, true));
 
         $data['customer_groups'] = $this->model_sale_OrderListPro->getCustomerGroups();
@@ -693,7 +693,7 @@ class ControllerSaleOrderListPro extends Controller {
                 'date_modified'     => date($OrderListPro_setting['date'], strtotime($result['date_modified'])),
                 'date_own'          => ($date_own != '0000-00-00') ? $date_own : '',
                 'view'              => $this->url->link('sale/order/info', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true),
-                'edit'              => $this->url->link('sale/order/edit', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true)
+                'edit'              => $this->url->link('sale/OrderManager/edit', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $result['order_id'] . $url, true)
             );
         }
 
@@ -1246,7 +1246,7 @@ class ControllerSaleOrderListPro extends Controller {
                             'total'       => $this->currency->format($all_order['total'], $all_order['currency_code'], $all_order['currency_value']),
                             'status'      => $all_order['name'],
                             'date_added'  => $all_order['date_added'],
-                            'view'        => $this->url->link('sale/order/info', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $all_order['order_id'], true),
+                            'view'        => $this->url->link('sale/OrderManager/edit', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . $all_order['order_id'], true),
                         );
                     }
                 }
@@ -1288,9 +1288,9 @@ class ControllerSaleOrderListPro extends Controller {
         $key = $this->config->get('module_OrderListPro_key');
         
         if ($lock !== $key) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 }
